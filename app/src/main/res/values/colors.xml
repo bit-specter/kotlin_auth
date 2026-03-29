@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_primary">#4A3AFF</color>
+    <color name="brand_gradient_end">#9D50BB</color>
+
+    <color name="bg_light">#F5F7FA</color>
+    <color name="input_fill">#F8F9FB</color>
+    <color name="text_main">#222222</color>
+    <color name="text_hint">#888888</color>
+    <color name="text_label">#444444</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
