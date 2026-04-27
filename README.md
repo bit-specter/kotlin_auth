@@ -521,5 +521,3 @@ The app uses a local dummy authentication system for demo purposes. No backend o
 - Successful login passes the user's display name to the home screen via Intent extra `USER_NAME`
 
 ---
-
-*Generated from source — cloud.meis / Movie Gallery v1.0*
