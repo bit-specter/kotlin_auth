@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLogin"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_light">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/bg_light" />
+            android:background="@color/surface_main" />
     </LinearLayout>
 
     <ScrollView
@@ -39,8 +41,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
+                android:fontFamily="monospace"
                 android:text="@string/app_name"
-                android:textColor="@color/white"
+                android:textColor="@color/text_main"
                 android:textSize="32sp"
                 android:textStyle="bold" />
 
@@ -50,11 +53,15 @@
                 android:background="@drawable/bg_white_card"
                 android:elevation="12dp"
                 android:orientation="vertical"
-                android:padding="32dp">
+                android:paddingStart="28dp"
+                android:paddingTop="28dp"
+                android:paddingEnd="28dp"
+                android:paddingBottom="28dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
                     android:text="@string/auth_welcome_title"
                     android:textColor="@color/text_main"
                     android:textSize="22sp"
@@ -64,6 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
+                    android:fontFamily="monospace"
                     android:text="@string/auth_welcome_subtitle"
                     android:textColor="@color/text_hint" />
 
@@ -71,27 +79,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="@string/label_nim"
+                    android:fontFamily="monospace"
+                    android:text="@string/label_email"
                     android:textColor="@color/text_label"
                     android:textSize="12sp" />
 
                 <EditText
-                    android:id="@+id/etUsername"
+                    android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="54dp"
                     android:layout_marginBottom="16dp"
-                    android:autofillHints=""
+                    android:autofillHints="emailAddress"
                     android:background="@drawable/bg_input_field"
-                    android:hint="@string/auth_username_hint"
-                    android:inputType="number"
+                    android:fontFamily="monospace"
+                    android:hint="@string/auth_email_hint"
+                    android:inputType="textEmailAddress"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="@color/text_main" />
+                    android:textColor="@color/text_main"
+                    android:textColorHint="@color/text_hint" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
+                    android:fontFamily="monospace"
                     android:text="@string/label_password"
                     android:textColor="@color/text_label"
                     android:textSize="12sp" />
@@ -101,13 +113,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="54dp"
                     android:layout_marginBottom="12dp"
-                    android:autofillHints=""
+                    android:autofillHints="password"
                     android:background="@drawable/bg_input_field"
+                    android:fontFamily="monospace"
                     android:hint="@string/auth_password_hint"
                     android:inputType="textPassword"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="@color/text_main" />
+                    android:textColor="@color/text_main"
+                    android:textColorHint="@color/text_hint" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,6 +130,7 @@
                     android:layout_marginBottom="24dp"
                     android:clickable="true"
                     android:focusable="true"
+                    android:fontFamily="monospace"
                     android:text="@string/forgot_your_password"
                     android:textColor="@color/text_label"
                     android:textSize="12sp" />
@@ -124,10 +139,11 @@
                     android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:backgroundTint="@color/brand_primary"
+                    android:background="@drawable/bg_console_button"
+                    android:fontFamily="monospace"
                     android:text="@string/auth_button"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
+                    android:textColor="@color/bg_light"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -137,6 +153,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="24dp"
                     android:layout_marginBottom="16dp"
+                    android:fontFamily="monospace"
                     android:text="@string/auth_or_sign_in"
                     android:textColor="@color/text_hint"
                     android:textSize="12sp" />
@@ -170,6 +187,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
                             android:text="@string/auth_google"
                             android:textColor="@color/text_main"
                             android:textStyle="bold" />
@@ -197,8 +215,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
                             android:text="@string/auth_apple"
-                            android:textColor="@color/black"
+                            android:textColor="@color/text_main"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>

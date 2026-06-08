@@ -1,21 +1,40 @@
 <resources>
-    <string name="app_name">Tugas Latihan</string>
+    <string name="app_name">PingMon</string>
     <string name="auth_welcome_title">Welcome Back</string>
     <string name="auth_welcome_subtitle">Enter your details below</string>
-
-    <string name="label_nim">NIM Address</string>
+    <string name="label_email">Email</string>
     <string name="label_password">Password</string>
-
-    <string name="auth_username_hint">NIM Kamu</string>
-    <string name="auth_password_hint">••••••••</string>
+    <string name="auth_email_hint">you@example.com</string>
+    <string name="auth_password_hint">Password</string>
     <string name="auth_button">Sign in</string>
-    <string name="auth_error">NIM atau Password Salah</string>
+    <string name="auth_error">Email atau password salah</string>
     <string name="auth_or_sign_in">Or sign in with</string>
     <string name="auth_google">Google</string>
     <string name="auth_apple">Apple</string>
-
-    <string name="home_welcome">Selamat Datang,</string>
-    <string name="home_username">User Name</string>
-    <string name="home_logout">LOGOUT</string>
+    <string name="home_logout">Logout</string>
     <string name="forgot_your_password">Forgot your password?</string>
+    <string name="main_title">PingMon</string>
+    <string name="main_subtitle">Network uptime console</string>
+    <string name="logged_in_user">operator: %1$s</string>
+    <string name="check_now">Check Now</string>
+    <string name="checking">Checking...</string>
+    <string name="empty_servers">Belum ada server</string>
+    <string name="add_server_title">Tambah server</string>
+    <string name="server_name">Nama server</string>
+    <string name="host_address">Host address</string>
+    <string name="auto_detect_hint">Smart check aktif: IP akan dicoba lewat ICMP, domain/URL lewat HTTP, lalu fallback otomatis.</string>
+    <string name="save">Simpan</string>
+    <string name="cancel">Batal</string>
+    <string name="status_up">UP</string>
+    <string name="status_down">DOWN</string>
+    <string name="status_unknown">UNKNOWN</string>
+    <string name="delete">Hapus</string>
+    <string name="latency_empty">-</string>
+    <string name="last_checked_empty">Belum pernah dicek</string>
+    <string name="console_ready">monitor ready</string>
+    <string name="console_prompt">$ pingmon watch --all</string>
+    <string name="notification_channel_alerts">PingMon Alerts</string>
+    <string name="server_down_title">Server DOWN</string>
+    <string name="server_down_message">%1$s tidak merespons</string>
+    <string name="add_server_command">$ pingmon add-target</string>
 </resources>
