@@ -22,6 +22,7 @@ The app is built with Kotlin, XML layouts, MVVM, Room, OkHttp, WorkManager, Coro
 - [Testing Targets](#testing-targets)
 - [Known Limitations](#known-limitations)
 - [Development Notes](#development-notes)
+- [License](#license)
 
 ## Overview
 
@@ -762,4 +763,8 @@ adb logcat -s PingMonDebug
 
 ## License
 
-No license file is currently included. Add a license before publishing or distributing this project outside local development.
+PingMon is released under the MIT License. See [LICENSE](LICENSE) for the full license text.
+
+In short, the MIT License allows use, copying, modification, publishing, distribution, sublicensing, and selling copies of this project, as long as the copyright notice and license text are included in copies or substantial portions of the software.
+
+This project is provided without warranty. Third-party dependencies keep their own licenses and terms.

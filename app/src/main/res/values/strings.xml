@@ -34,6 +34,7 @@
     <string name="console_ready">monitor ready</string>
     <string name="console_prompt">$ pingmon watch --all</string>
     <string name="notification_channel_alerts">PingMon Alerts</string>
+    <string name="notification_permission_required">Izin notifikasi diperlukan agar alert background bisa muncul.</string>
     <string name="server_down_title">Server DOWN</string>
     <string name="server_down_message">%1$s tidak merespons</string>
     <string name="add_server_command">$ pingmon add-target</string>

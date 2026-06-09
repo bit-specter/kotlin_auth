@@ -70,7 +70,7 @@ class PingWorker(
                         markDownAlert(server.id)
                     }
                 } else {
-                    Log.d(TAG, "notify skipped already-alerted serverId=${server.id}")
+                    Log.d(TAG, "notify skipped cooldown serverId=${server.id}")
                 }
             }
             Result.success()
@@ -89,7 +89,13 @@ class PingWorker(
             return false
         }
 
-        return !alertPreferences.getBoolean(downAlertKey(server.id), false)
+        val lastAlertAt = alertPreferences.getLong(lastDownAlertKey(server.id), 0L)
+        if (lastAlertAt <= 0L) {
+            return true
+        }
+
+        val elapsedMs = pingResult.checkedAt - lastAlertAt
+        return elapsedMs < 0L || elapsedMs >= DOWN_ALERT_REPEAT_INTERVAL_MS
     }
 
     @SuppressLint("MissingPermission")
@@ -181,17 +187,23 @@ class PingWorker(
 
     private fun markDownAlert(serverId: Int) {
         alertPreferences.edit()
-            .putBoolean(downAlertKey(serverId), true)
+            .putLong(lastDownAlertKey(serverId), System.currentTimeMillis())
+            .remove(legacyDownAlertKey(serverId))
             .apply()
     }
 
     private fun clearDownAlert(serverId: Int) {
         alertPreferences.edit()
-            .remove(downAlertKey(serverId))
+            .remove(lastDownAlertKey(serverId))
+            .remove(legacyDownAlertKey(serverId))
             .apply()
     }
 
-    private fun downAlertKey(serverId: Int): String {
+    private fun lastDownAlertKey(serverId: Int): String {
+        return "down_alert_last_sent_$serverId"
+    }
+
+    private fun legacyDownAlertKey(serverId: Int): String {
         return "down_alert_sent_$serverId"
     }
 
@@ -201,7 +213,9 @@ class PingWorker(
 
     companion object {
         const val WORK_NAME = "pingmon_periodic_ping"
+        const val REPEAT_INTERVAL_MINUTES = 15L
         private const val CHECK_TIMEOUT_MS = 10_000L
+        private const val DOWN_ALERT_REPEAT_INTERVAL_MS = REPEAT_INTERVAL_MINUTES * 60_000L
         private const val CHANNEL_ID = "pingmon_alerts"
         private const val DOWN_ALERT_PREFERENCES = "pingmon_down_alerts"
         private const val TAG = "PingMonDebug"

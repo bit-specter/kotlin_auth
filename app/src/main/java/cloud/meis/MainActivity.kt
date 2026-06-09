@@ -10,11 +10,13 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.ComponentActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -44,6 +46,17 @@ class MainActivity : ComponentActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ServerAdapter
     private lateinit var sessionManager: SessionManager
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (!granted) {
+            Toast.makeText(
+                this,
+                getString(R.string.notification_permission_required),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -219,14 +232,14 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        requestPermissions(
-            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-            NOTIFICATION_PERMISSION_REQUEST_CODE
-        )
+        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     private fun schedulePingWorker() {
-        val request = PeriodicWorkRequestBuilder<PingWorker>(15, TimeUnit.MINUTES)
+        val request = PeriodicWorkRequestBuilder<PingWorker>(
+            PingWorker.REPEAT_INTERVAL_MINUTES,
+            TimeUnit.MINUTES
+        )
             .setConstraints(pingConstraints())
             .build()
 
@@ -234,6 +247,10 @@ class MainActivity : ComponentActivity() {
             PingWorker.WORK_NAME,
             ExistingPeriodicWorkPolicy.UPDATE,
             request
+        )
+        Log.d(
+            TAG,
+            "periodic worker scheduled interval=${PingWorker.REPEAT_INTERVAL_MINUTES} minutes"
         )
     }
 
@@ -244,6 +261,6 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val NOTIFICATION_PERMISSION_REQUEST_CODE = 2001
+        private const val TAG = "PingMonDebug"
     }
 }
