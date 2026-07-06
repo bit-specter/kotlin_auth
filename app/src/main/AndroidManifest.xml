@@ -28,6 +28,11 @@
         </activity>
 
         <activity
+            android:name=".RegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Tugas_Latihan" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
     </application>

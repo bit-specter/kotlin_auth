@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import cloud.meis.data.local.entity.ServerEntity
 import cloud.meis.data.model.PingResult
-import cloud.meis.data.model.ServerProtocol
 import cloud.meis.data.repository.ServerRepository
 import cloud.meis.network.AutoPinger
 import kotlinx.coroutines.CancellationException
@@ -19,12 +18,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 
 class MainViewModel(
     private val repository: ServerRepository,
+    private val userId: Int,
     private val autoPinger: AutoPinger = AutoPinger()
 ) : ViewModel() {
     private val isChecking = MutableStateFlow(false)
@@ -32,7 +33,7 @@ class MainViewModel(
     private var checkJob: Job? = null
 
     val uiState = combine(
-        repository.getAllServers(),
+        if (userId > 0) repository.getAllServers(userId) else flowOf(emptyList()),
         isChecking,
         debugLogs
     ) { servers, checking, logs ->
@@ -56,6 +57,11 @@ class MainViewModel(
         serverName: String,
         hostAddress: String
     ): Boolean {
+        if (userId <= 0) {
+            emitEvent("User belum login")
+            return false
+        }
+
         val cleanName = serverName.trim()
         val cleanHost = hostAddress.trim().lowercase()
 
@@ -67,9 +73,10 @@ class MainViewModel(
         viewModelScope.launch {
             repository.addServer(
                 ServerEntity(
+                    userId = userId,
                     serverName = cleanName,
                     hostAddress = cleanHost,
-                    protocol = ServerProtocol.AUTO
+                    protocol = "AUTO"
                 )
             )
             restartCheckAllServers()
@@ -81,7 +88,7 @@ class MainViewModel(
     fun deleteServer(server: ServerEntity) {
         viewModelScope.launch {
             repository.deleteServer(server)
-            if (repository.getAllServersOnce().isEmpty()) {
+            if (repository.getAllServersOnce(userId).isEmpty()) {
                 stopActiveCheck()
             }
         }
@@ -93,7 +100,7 @@ class MainViewModel(
         }
 
         checkJob = viewModelScope.launch {
-            val servers = repository.getAllServersOnce()
+            val servers = repository.getAllServersOnce(userId)
             if (servers.isEmpty()) {
                 appendDebug("no targets")
                 emitEvent("Tambahkan server dulu")
@@ -105,7 +112,7 @@ class MainViewModel(
             try {
                 servers.map { server ->
                     async {
-                        if (repository.getServerById(server.id) == null) {
+                        if (repository.getServerById(userId, server.id) == null) {
                             return@async
                         }
 
@@ -119,11 +126,12 @@ class MainViewModel(
                             source = "target-timeout"
                         )
 
-                        if (repository.getServerById(server.id) == null) {
+                        if (repository.getServerById(userId, server.id) == null) {
                             return@async
                         }
 
                         repository.updateServerStatus(
+                            userId = userId,
                             id = server.id,
                             isUp = result.isUp,
                             latencyMs = result.latencyMs,
@@ -135,7 +143,7 @@ class MainViewModel(
                     }
                 }.awaitAll()
 
-                if (repository.getAllServersOnce().isNotEmpty()) {
+                if (repository.getAllServersOnce(userId).isNotEmpty()) {
                     appendDebug("check complete")
                     emitEvent("Check selesai")
                 }
@@ -179,12 +187,13 @@ class MainViewModel(
     }
 
     class Factory(
-        private val repository: ServerRepository
+        private val repository: ServerRepository,
+        private val userId: Int
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-                return MainViewModel(repository) as T
+                return MainViewModel(repository, userId) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

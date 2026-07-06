@@ -7,16 +7,16 @@ import kotlinx.coroutines.flow.Flow
 class ServerRepository(
     private val serverDao: ServerDao
 ) {
-    fun getAllServers(): Flow<List<ServerEntity>> {
-        return serverDao.getAllServers()
+    fun getAllServers(userId: Int): Flow<List<ServerEntity>> {
+        return serverDao.getAllServers(userId)
     }
 
-    suspend fun getAllServersOnce(): List<ServerEntity> {
-        return serverDao.getAllServersOnce()
+    suspend fun getAllServersOnce(userId: Int): List<ServerEntity> {
+        return serverDao.getAllServersOnce(userId)
     }
 
-    suspend fun getServerById(id: Int): ServerEntity? {
-        return serverDao.getServerById(id)
+    suspend fun getServerById(userId: Int, id: Int): ServerEntity? {
+        return serverDao.getServerById(userId, id)
     }
 
     suspend fun addServer(server: ServerEntity): Long {
@@ -28,12 +28,14 @@ class ServerRepository(
     }
 
     suspend fun updateServerStatus(
+        userId: Int,
         id: Int,
         isUp: Boolean,
         latencyMs: Int,
         checkedAt: Long
     ) {
         serverDao.updateServerStatus(
+            userId = userId,
             id = id,
             isUp = isUp,
             latencyMs = latencyMs,
@@ -45,7 +47,7 @@ class ServerRepository(
         serverDao.deleteServer(server)
     }
 
-    suspend fun deleteServerById(id: Int) {
-        serverDao.deleteServerById(id)
+    suspend fun deleteServerById(userId: Int, id: Int) {
+        serverDao.deleteServerById(userId, id)
     }
 }

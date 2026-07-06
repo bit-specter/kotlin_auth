@@ -22,6 +22,7 @@ import cloud.meis.data.local.entity.ServerEntity
 import cloud.meis.data.model.PingResult
 import cloud.meis.data.repository.ServerRepository
 import cloud.meis.network.AutoPinger
+import cloud.meis.data.local.preference.SessionManager
 import kotlinx.coroutines.withTimeoutOrNull
 
 class PingWorker(
@@ -32,10 +33,17 @@ class PingWorker(
         ServerRepository(AppDatabase.getInstance(applicationContext).serverDao())
     }
     private val autoPinger = AutoPinger()
+    private val sessionManager by lazy { SessionManager(applicationContext) }
 
     override suspend fun doWork(): Result {
         return runCatching {
-            val servers = repository.getAllServersOnce()
+            val userId = sessionManager.getUserId()
+            if (userId <= 0) {
+                Log.d(TAG, "worker skipped no-active-user")
+                return Result.success()
+            }
+
+            val servers = repository.getAllServersOnce(userId)
             Log.d(TAG, "worker start count=${servers.size}")
 
             servers.forEach { server ->
@@ -56,6 +64,7 @@ class PingWorker(
                 val shouldNotifyDown = shouldNotifyDown(server, pingResult)
 
                 repository.updateServerStatus(
+                    userId = userId,
                     id = server.id,
                     isUp = pingResult.isUp,
                     latencyMs = pingResult.latencyMs,

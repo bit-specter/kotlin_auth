@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ServerAdapter
     private lateinit var sessionManager: SessionManager
+    private var currentUserId: Int = 0
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -63,13 +64,19 @@ class MainActivity : ComponentActivity() {
         setContentView(R.layout.activity_main)
         applySystemBarInsets()
         sessionManager = SessionManager(this)
+        currentUserId = intent.getIntExtra("USER_ID", sessionManager.getUserId())
+        if (currentUserId <= 0) {
+            sessionManager.clear()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
 
-        val repository = ServerRepository(
-            AppDatabase.getInstance(applicationContext).serverDao()
-        )
+        val appDatabase = AppDatabase.getInstance(applicationContext)
+        val repository = ServerRepository(appDatabase.serverDao())
         viewModel = ViewModelProvider(
             this,
-            MainViewModel.Factory(repository)
+            MainViewModel.Factory(repository, currentUserId)
         )[MainViewModel::class.java]
 
         adapter = ServerAdapter { server ->
@@ -93,6 +100,8 @@ class MainActivity : ComponentActivity() {
 
         findViewById<Button>(R.id.btnLogout).setOnClickListener {
             sessionManager.clear()
+            androidx.work.WorkManager.getInstance(applicationContext)
+                .cancelUniqueWork(PingWorker.WORK_NAME)
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }

@@ -5,15 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import cloud.meis.data.local.dao.ServerDao
+import cloud.meis.data.local.dao.UserDao
 import cloud.meis.data.local.entity.ServerEntity
+import cloud.meis.data.local.entity.UserEntity
 
 @Database(
-    entities = [ServerEntity::class],
-    version = 1,
+    entities = [UserEntity::class, ServerEntity::class],
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun serverDao(): ServerDao
+    abstract fun userDao(): UserDao
 
     companion object {
         private const val DATABASE_NAME = "pingmon.db"
@@ -27,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     DATABASE_NAME
-                ).build().also { INSTANCE = it }
+                    ).fallbackToDestructiveMigration().build().also { INSTANCE = it }
             }
         }
     }

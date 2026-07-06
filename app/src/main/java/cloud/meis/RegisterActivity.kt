@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -18,12 +17,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import cloud.meis.data.local.database.AppDatabase
 import cloud.meis.data.local.preference.SessionManager
 import cloud.meis.data.repository.UserRepository
-import cloud.meis.ui.login.LoginEvent
-import cloud.meis.ui.login.LoginViewModel
+import cloud.meis.ui.register.RegisterEvent
+import cloud.meis.ui.register.RegisterViewModel
 import kotlinx.coroutines.launch
 
-class LoginActivity : ComponentActivity() {
-    private lateinit var viewModel: LoginViewModel
+class RegisterActivity : ComponentActivity() {
+    private lateinit var viewModel: RegisterViewModel
     private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,55 +33,41 @@ class LoginActivity : ComponentActivity() {
             return
         }
 
-        if (sessionManager.isLoggedIn() && sessionManager.getUserId() <= 0) {
-            sessionManager.clear()
-        }
-
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_register)
         applySystemBarInsets()
 
         val repository = UserRepository(AppDatabase.getInstance(applicationContext).userDao())
-        viewModel = ViewModelProvider(this, LoginViewModelFactory(repository))[LoginViewModel::class.java]
+        viewModel = ViewModelProvider(this, RegisterViewModelFactory(repository))[RegisterViewModel::class.java]
 
-        val btnGoogle = findViewById<LinearLayout>(R.id.btnGoogle)
-        val btnApple = findViewById<LinearLayout>(R.id.btnApple)
-        val etEmail = findViewById<EditText>(R.id.etEmail)
-        val etPassword = findViewById<EditText>(R.id.etPassword)
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
-        val tvGoToRegister = findViewById<TextView>(R.id.tvGoToRegister)
+        val etFullName = findViewById<EditText>(R.id.etFullName)
+        val etEmail = findViewById<EditText>(R.id.etRegisterEmail)
+        val etPassword = findViewById<EditText>(R.id.etRegisterPassword)
+        val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
+        val btnRegister = findViewById<Button>(R.id.btnRegister)
 
-        window.decorView.translationY = 80f
-        window.decorView.alpha = 0f
-        window.decorView.animate().translationY(0f).alpha(1f).setDuration(800).start()
-
-        btnGoogle.setOnClickListener {
-            Toast.makeText(this, "Google Login (Coming Soon)", Toast.LENGTH_SHORT).show()
+        findViewById<TextView>(R.id.tvGoToLogin).setOnClickListener {
+            finish()
         }
 
-        btnApple.setOnClickListener {
-            Toast.makeText(this, "Apple Login (Coming Soon)", Toast.LENGTH_SHORT).show()
-        }
-
-        btnLogin.setOnClickListener {
-            viewModel.login(
+        btnRegister.setOnClickListener {
+            viewModel.register(
+                fullName = etFullName.text.toString(),
                 email = etEmail.text.toString(),
-                password = etPassword.text.toString()
+                password = etPassword.text.toString(),
+                confirmPassword = etConfirmPassword.text.toString()
             )
-        }
-
-        tvGoToRegister.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
                     when (event) {
-                        is LoginEvent.Success -> {
+                        is RegisterEvent.Success -> {
                             sessionManager.saveLogin(event.userId, event.userName)
+                            Toast.makeText(this@RegisterActivity, getString(R.string.register_success), Toast.LENGTH_SHORT).show()
                             openMain(event.userId, event.userName)
                         }
-                        is LoginEvent.Error -> showLoginError(btnLogin, event.message)
+                        is RegisterEvent.Error -> Toast.makeText(this@RegisterActivity, event.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -90,7 +75,7 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun applySystemBarInsets() {
-        val root = findViewById<View>(R.id.rootLogin)
+        val root = findViewById<View>(R.id.rootRegister)
         val baseLeft = root.paddingLeft
         val baseTop = root.paddingTop
         val baseRight = root.paddingRight
@@ -117,14 +102,5 @@ class LoginActivity : ComponentActivity() {
             putExtra("USER_NAME", userName)
         })
         finish()
-    }
-
-    private fun showLoginError(view: View, message: String) {
-        view.animate().translationX(15f).setDuration(40).withEndAction {
-            view.animate().translationX(-15f).setDuration(40).withEndAction {
-                view.animate().translationX(0f).setDuration(40).start()
-            }.start()
-        }.start()
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

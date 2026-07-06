@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootLogin"
+    android:id="@+id/rootRegister"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_light">
@@ -62,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="monospace"
-                    android:text="@string/auth_welcome_title"
+                    android:text="@string/auth_register_title"
                     android:textColor="@color/text_main"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -72,8 +72,32 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
                     android:fontFamily="monospace"
-                    android:text="@string/auth_welcome_subtitle"
+                    android:text="@string/auth_register_subtitle"
                     android:textColor="@color/text_hint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="monospace"
+                    android:text="@string/label_full_name"
+                    android:textColor="@color/text_label"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/etFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginBottom="16dp"
+                    android:autofillHints="name"
+                    android:background="@drawable/bg_input_field"
+                    android:fontFamily="monospace"
+                    android:hint="@string/auth_full_name_hint"
+                    android:inputType="textPersonName"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/text_main"
+                    android:textColorHint="@color/text_hint" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,7 +109,7 @@
                     android:textSize="12sp" />
 
                 <EditText
-                    android:id="@+id/etEmail"
+                    android:id="@+id/etRegisterEmail"
                     android:layout_width="match_parent"
                     android:layout_height="54dp"
                     android:layout_marginBottom="16dp"
@@ -109,10 +133,10 @@
                     android:textSize="12sp" />
 
                 <EditText
-                    android:id="@+id/etPassword"
+                    android:id="@+id/etRegisterPassword"
                     android:layout_width="match_parent"
                     android:layout_height="54dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="16dp"
                     android:autofillHints="password"
                     android:background="@drawable/bg_input_field"
                     android:fontFamily="monospace"
@@ -126,112 +150,49 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="24dp"
-                    android:clickable="true"
-                    android:focusable="true"
+                    android:layout_marginBottom="4dp"
                     android:fontFamily="monospace"
-                    android:text="@string/forgot_your_password"
+                    android:text="@string/label_confirm_password"
                     android:textColor="@color/text_label"
                     android:textSize="12sp" />
 
+                <EditText
+                    android:id="@+id/etConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginBottom="24dp"
+                    android:autofillHints="password"
+                    android:background="@drawable/bg_input_field"
+                    android:fontFamily="monospace"
+                    android:hint="@string/auth_confirm_password_hint"
+                    android:inputType="textPassword"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/text_main"
+                    android:textColorHint="@color/text_hint" />
+
                 <Button
-                    android:id="@+id/btnLogin"
+                    android:id="@+id/btnRegister"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:background="@drawable/bg_console_button"
                     android:fontFamily="monospace"
-                    android:text="@string/auth_button"
+                    android:text="@string/register_button"
                     android:textAllCaps="false"
                     android:textColor="@color/bg_light"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvGoToRegister"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="monospace"
-                    android:text="@string/go_to_register"
-                    android:textColor="@color/text_label"
-                    android:textSize="12sp" />
-
-                <TextView
+                    android:id="@+id/tvGoToLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="24dp"
-                    android:layout_marginBottom="16dp"
                     android:fontFamily="monospace"
-                    android:text="@string/auth_or_sign_in"
-                    android:textColor="@color/text_hint"
+                    android:text="@string/go_to_login"
+                    android:textColor="@color/text_label"
                     android:textSize="12sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <LinearLayout
-                        android:id="@+id/btnGoogle"
-                        android:layout_width="0dp"
-                        android:layout_height="56dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_social_button"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginEnd="10dp"
-                            android:contentDescription="@string/auth_google"
-                            android:src="@drawable/ic_google" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="monospace"
-                            android:text="@string/auth_google"
-                            android:textColor="@color/text_main"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/btnApple"
-                        android:layout_width="0dp"
-                        android:layout_height="56dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_social_button"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginEnd="10dp"
-                            android:contentDescription="@string/auth_apple"
-                            android:src="@drawable/ic_apple" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="monospace"
-                            android:text="@string/auth_apple"
-                            android:textColor="@color/text_main"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

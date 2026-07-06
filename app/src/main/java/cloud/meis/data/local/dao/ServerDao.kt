@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ServerDao {
-    @Query("SELECT * FROM servers ORDER BY server_name ASC")
-    fun getAllServers(): Flow<List<ServerEntity>>
+    @Query("SELECT * FROM servers WHERE user_id = :userId ORDER BY server_name ASC")
+    fun getAllServers(userId: Int): Flow<List<ServerEntity>>
 
-    @Query("SELECT * FROM servers ORDER BY server_name ASC")
-    suspend fun getAllServersOnce(): List<ServerEntity>
+    @Query("SELECT * FROM servers WHERE user_id = :userId ORDER BY server_name ASC")
+    suspend fun getAllServersOnce(userId: Int): List<ServerEntity>
 
-    @Query("SELECT * FROM servers WHERE id = :id LIMIT 1")
-    suspend fun getServerById(id: Int): ServerEntity?
+    @Query("SELECT * FROM servers WHERE user_id = :userId AND id = :id LIMIT 1")
+    suspend fun getServerById(userId: Int, id: Int): ServerEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertServer(server: ServerEntity): Long
@@ -32,10 +32,11 @@ interface ServerDao {
         SET last_status = :isUp,
             last_latency = :latencyMs,
             last_checked = :checkedAt
-        WHERE id = :id
+        WHERE id = :id AND user_id = :userId
         """
     )
     suspend fun updateServerStatus(
+        userId: Int,
         id: Int,
         isUp: Boolean,
         latencyMs: Int,
@@ -45,6 +46,6 @@ interface ServerDao {
     @Delete
     suspend fun deleteServer(server: ServerEntity)
 
-    @Query("DELETE FROM servers WHERE id = :id")
-    suspend fun deleteServerById(id: Int)
+    @Query("DELETE FROM servers WHERE user_id = :userId AND id = :id")
+    suspend fun deleteServerById(userId: Int, id: Int)
 }
